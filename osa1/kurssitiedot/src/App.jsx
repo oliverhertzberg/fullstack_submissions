@@ -3,21 +3,22 @@ const Header = (props) => {
 }
 
 const Part = ({part, exercise}) => {
+  console.log("part in Part component: ", part)
+  console.log("exercise in Part component :", exercise)
   return <p>{part} {exercise}</p>
 }
 
-const Content = (props) => {
-  return (
-    <>
-      <Part part={props.p1} exercise={props.ex1}/>
-      <Part part={props.p2} exercise={props.ex2}/>
-      <Part part={props.p3} exercise={props.ex3}/>
-    </>
-  )
+const Content = ({parts}) => {
+     let result = parts.map((item) =>  {
+      return <Part part={item.name} exercise={item.exercises}/>
+     })
+     return result
 }
 
-const Total = ({e1, e2, e3}) => {
-      return <p>Number of exercises {e1 + e2 + e3}</p>
+const Total = ({parts}) => {
+      let exercise_count = 0 
+      parts.map((item) => exercise_count+= item.exercises)
+      return <p>Number of exercises {exercise_count}</p>
 }
 
 
@@ -37,13 +38,12 @@ const App = () => {
       exercises: 14
     }
   ]
-  console.log(parts[0].exercises)
 
   return (
     <div>
       <Header course={course}/>
-      <Content  p1={parts[0].name} ex1={parts[0].exercises} p2={parts[1].name} ex2={parts[1].exercises} p3={parts[2].name} ex3={parts[2].exercises}/>
-      <Total e1={parts[0].exercises} e2={parts[1].exercises} e3={parts[2].exercises}/>
+      <Content parts={parts}/>
+      <Total parts={parts}/>
     </div>
   )
 
