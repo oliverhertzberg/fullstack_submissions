@@ -21,12 +21,17 @@ const Feedback = ({setGood, setNeutral, setBad}) => {
 }
 
 const Stats = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad
+
   return (
     <>
       <h1>statistics</h1>
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>all {all}</p>
+      <p>average {all && (good - bad) / all}</p>
+      <p>positive {all && ((good / all) * 100)} %</p>
     </>
   )
 }
