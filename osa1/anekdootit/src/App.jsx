@@ -25,14 +25,17 @@ const Anecdotes = (props) => {
       return num
     }))
   }
-
-
+  const max_index = votes.indexOf(Math.max(...votes))
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[props.selected]}</p>
       <p>has {votes[props.selected]} {votes[props.selected] === 1 ? 'vote' : 'votes'}</p>
       <Button onClick={voteHandler} text={"vote"}/>
       <Button onClick={clickHandler} text={"next anecdote"}/>
+      <h1>Anecdote with most votes</h1>
+      <p>{props.anecdotes[max_index]}</p>
+      <p>has {votes[max_index]} {votes[max_index] === 1 ? 'vote' : 'votes'}</p>
     </>
   )
 
