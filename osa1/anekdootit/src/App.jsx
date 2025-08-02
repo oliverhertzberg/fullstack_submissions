@@ -1,25 +1,38 @@
 import { useState } from 'react'
 
 const Button = (props) => {
-  const clickHandler = () => {
-    let anecdotes_index
-    do { anecdotes_index = Math.floor(Math.random() * props.num_of_anecdotes) }
-    while(anecdotes_index === props.selected)
-
-    props.onClick(anecdotes_index)
-  }
-
   return (
-    <button onClick={clickHandler}>{props.text}</button>
+    <button onClick={props.onClick}>{props.text}</button>
   )
 
 }
 
 const Anecdotes = (props) => {
+  const anecdotes_len = props.anecdotes.length
+  const [votes, setVotes] = useState(Array(anecdotes_len).fill(0))
+
+  const clickHandler = () => {
+    let anecdotes_index
+    do { anecdotes_index = Math.floor(Math.random() * anecdotes_len) }
+    while(anecdotes_index === props.selected)
+
+    props.setSelected(anecdotes_index)
+  }
+
+  const voteHandler = () => {
+    setVotes(prev => prev.map((num, index) => {
+      if (index === props.selected) return num += 1
+      return num
+    }))
+  }
+
+
   return (
     <>
       <p>{props.anecdotes[props.selected]}</p>
-      <Button num_of_anecdotes={props.anecdotes.length} onClick={props.setSelected} selected={props.selected} text={"next anecdote"}/>
+      <p>has {votes[props.selected]} {votes[props.selected] === 1 ? 'vote' : 'votes'}</p>
+      <Button onClick={voteHandler} text={"vote"}/>
+      <Button onClick={clickHandler} text={"next anecdote"}/>
     </>
   )
 
