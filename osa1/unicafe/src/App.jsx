@@ -20,7 +20,10 @@ const Feedback = ({setGood, setNeutral, setBad}) => {
   )
 }
 
-const Stats = ({ good, neutral, bad }) => {
+const StatisticLine = (props) => {
+  return <p>{props.text} {props.value} {props.text === 'positive' ? "%" : ""}</p>
+}
+const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad
 
   return ( 
@@ -30,12 +33,12 @@ const Stats = ({ good, neutral, bad }) => {
       <p>No feedback given</p>
       ) : (
       <>
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        <p>all {all}</p>
-        <p>average {all && (good - bad) / all}</p>
-        <p>positive {all && ((good / all) * 100)} %</p>
+        <StatisticLine text={'good'} value={good} />
+        <StatisticLine text={'neutral'} value={neutral} />
+        <StatisticLine text={'bad'} value={bad} />
+        <StatisticLine text={'all'} value={all} />
+        <StatisticLine text={'average'} value={all && (good - bad) / all} />
+        <StatisticLine text={'positive'} value={all && ((good / all) * 100)} />
       </>
       )}
     </>
@@ -51,7 +54,7 @@ const App = () => {
   return (
     <div>
       <Feedback setGood={setGood} setNeutral={setNeutral} setBad={setBad}/>
-      <Stats good={good} neutral={neutral} bad={bad}/>
+      <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
