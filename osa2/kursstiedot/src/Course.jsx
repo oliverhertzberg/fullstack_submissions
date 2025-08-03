@@ -1,4 +1,5 @@
 const Header = (props) => {
+  if(!props.course) return
     return <h1>{props.course}</h1>
   }
   
@@ -21,13 +22,16 @@ const Total = ({parts}) => {
 }
 
 const Course = ({course}) => {
-  console.log('course: ',course)
-    if (!course || !course.name) return
+    if (!course || course.length < 1) return <h1>no courses to show</h1>
     return (
         <div>
-            <Header course={course.name}/>
-            <Content parts={course.parts}/>
-            <Total parts={course.parts}/>
+          {course.map(item => (
+            <div key={item.id}>
+              <Header course={item.name}/>
+              <Content parts={item.parts}/>
+              <Total parts={item.parts}/>
+            </div>
+          ))}
         </div>
     )
 }
