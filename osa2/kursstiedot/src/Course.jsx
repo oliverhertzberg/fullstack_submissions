@@ -16,8 +16,7 @@ const Content = ({parts}) => {
 
 const Total = ({parts}) => {
   if (!parts) return
-  let exercise_count = 0 
-  parts.map((item) => exercise_count+= item.exercises)
+  let exercise_count = parts.reduce((accumulator, item) => accumulator + item.exercises, 0)
   return <b>Number of exercises {exercise_count}</b>
 }
 
