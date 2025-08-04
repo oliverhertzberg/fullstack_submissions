@@ -27,7 +27,15 @@ const App = () => {
       setNewNumber('')
       return (alert(`${newName} already exists in phonebook`))
     }
-    setPersons([...persons, { name: `${newName}`, number: `${newNumber}`}])
+    axios.post('http://localhost:3001/persons', 
+      { name: `${newName}`, number: `${newNumber}` }
+    )
+    .then((res) =>  {
+      console.log(res)
+      setPersons(persons.concat(res.data))
+    })
+    .catch((err) => console.log(err))
+
     alert(`contact: ${newName} was submitted successfully!`)
     setNewName('')
     setNewNumber('')
