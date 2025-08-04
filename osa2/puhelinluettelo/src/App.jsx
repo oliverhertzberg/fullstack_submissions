@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 
 const App = () => {
@@ -13,12 +13,11 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
+    personService.getAll()
       .then(res => {
         setPersons(res.data)
-    })
-  } 
-  ,[])
+      })
+  },[])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -27,14 +26,12 @@ const App = () => {
       setNewNumber('')
       return (alert(`${newName} already exists in phonebook`))
     }
-    axios.post('http://localhost:3001/persons', 
-      { name: `${newName}`, number: `${newNumber}` }
-    )
-    .then((res) =>  {
-      console.log(res)
-      setPersons(persons.concat(res.data))
-    })
-    .catch((err) => console.log(err))
+    personService.create({ name: `${newName}`, number: `${newNumber}` }) 
+      .then((res) =>  {
+        console.log(res)
+        setPersons(persons.concat(res.data))
+      })
+      .catch((err) => console.log(err))
 
     alert(`contact: ${newName} was submitted successfully!`)
     setNewName('')
