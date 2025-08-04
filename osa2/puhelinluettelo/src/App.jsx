@@ -21,19 +21,25 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      setNewName('')
-      setNewNumber('')
-      return (alert(`${newName} already exists in phonebook`))
+    const personExists = persons.find(person => person.name === newName)
+    if (personExists) {
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(
+            personExists.id, 
+            {...personExists, number: `${newNumber}`})
+          .then(setPersons(persons.map((person) => {
+            return person.id !== personExists.id ? person : {...person, number: `${newNumber}`}
+          })))
+          .catch(error => console.log(error))
+      
+      }
+    } else {
+      personService.create({ name: `${newName}`, number: `${newNumber}` }) 
+        .then((res) => setPersons(persons.concat(res.data)))
+        .catch((error) => console.log(error))
+      alert(`contact: ${newName} was submitted successfully!`)
     }
-    personService.create({ name: `${newName}`, number: `${newNumber}` }) 
-      .then((res) =>  {
-        console.log(res)
-        setPersons(persons.concat(res.data))
-      })
-      .catch((error) => console.log(error))
-
-    alert(`contact: ${newName} was submitted successfully!`)
     setNewName('')
     setNewNumber('')
   }
