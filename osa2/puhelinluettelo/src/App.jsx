@@ -17,13 +17,13 @@ const App = () => {
       .then(res => {
         setPersons(res.data)
       })
+      .catch(error => console.log(error))
   },[])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const personExists = persons.find(person => person.name === newName)
-    if (personExists) {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+    if (personExists && window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(
             personExists.id, 
@@ -32,8 +32,6 @@ const App = () => {
             return person.id !== personExists.id ? person : {...person, number: `${newNumber}`}
           })))
           .catch(error => console.log(error))
-      
-      }
     } else {
       personService.create({ name: `${newName}`, number: `${newNumber}` }) 
         .then((res) => setPersons(persons.concat(res.data)))
