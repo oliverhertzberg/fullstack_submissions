@@ -9,7 +9,12 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    alert('a name was submitted: ', + newName)
+    if (persons.some(person => person.name === newName)) {
+      setNewName('')
+      return (alert(`${newName} already exists in phonebook`))
+    }
+    setPersons([...persons, { name: `${newName}` }])
+    alert(`a name was submitted: ${newName}`)
     setNewName('')
   }
 
@@ -29,7 +34,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        {persons && persons.map( person => 
+        {persons.length > 0 && persons.map( person => 
           <p key={person.name}>{person.name}</p> 
         )}
     </div>
