@@ -46,7 +46,7 @@ const App = () => {
           })))
           .catch(error => { 
             console.log(error)
-            makeNotification(`Error: failed to retrieve phonebook contacts!`)
+            makeNotification(`Error: contact has already been removed from server!`)
         })
     } else {
       personService.create({ name: `${newName}`, number: `${newNumber}` }) 
