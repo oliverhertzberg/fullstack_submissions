@@ -27,10 +27,14 @@ const App = () => {
     setSearch(e.target.value)
   }
 
+  const showCountry = (match) => {
+    setMatches([match])
+  }
+
   return (
     <div>
       <SearchBar value={search} onChange={handleSearch}/>
-      <Matches matches={matches}/>
+      <Matches matches={matches} onClick={showCountry}/>
     </div>
   )
 }

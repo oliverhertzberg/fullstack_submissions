@@ -11,7 +11,12 @@ const Matches = (props) => {
         return (
             <>
                 {props.matches.map( item => {
-                    return <div key={item.name.common}>{item.name.common}</div>
+                    return (
+                        <div key={item.name.common}>
+                            {item.name.common}
+                            <button style={{marginLeft: '5px'}} onClick={() => props.onClick(item)}>Show</button>
+                        </div>
+                    )
                     }
                 )}
             </>
