@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import countryService from './services/countriesService'
 import SearchBar from './components/SearchBar'
 import Matches from './components/Matches'
+import Weather from './components/Weather'
 
 
 const App = () => {
@@ -20,6 +21,10 @@ const App = () => {
 
   useEffect(() => {
     if (!countries.current) return
+    if (search === '' || search === ' ') {
+      setMatches(null)
+      return
+    }
     setMatches(countries.current.filter((item) => item.name.common.toLowerCase().includes(search.toLowerCase())))
   },[search])
 
@@ -35,6 +40,7 @@ const App = () => {
     <div>
       <SearchBar value={search} onChange={handleSearch}/>
       <Matches matches={matches} onClick={showCountry}/>
+      <Weather matches={matches} />
     </div>
   )
 }

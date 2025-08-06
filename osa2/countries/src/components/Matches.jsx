@@ -1,3 +1,4 @@
+
 const Matches = (props) => {
     if (!props.matches || !props.matches[0]) return null
 
@@ -23,7 +24,6 @@ const Matches = (props) => {
         )
     }
     const match = props.matches[0]
-    console.log(match)
     return (
         <div>
             <h1>{match.name.common}</h1>
