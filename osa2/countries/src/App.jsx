@@ -1,0 +1,38 @@
+import { useState, useEffect, useRef } from 'react'
+
+import countryService from './services/countriesService'
+import SearchBar from './components/SearchBar'
+import Matches from './components/Matches'
+
+
+const App = () => {
+  const [matches, setMatches] = useState(null)
+  const [search, setSearch] = useState('')
+  const countries = useRef(null)
+
+
+  countryService.getAll()
+    .then(res => {
+      countries.current = res.data
+    })
+    .catch(err => console.log(err))
+  
+
+  useEffect(() => {
+    if (!countries.current) return
+    setMatches(countries.current.filter((item) => item.name.common.toLowerCase().includes(search.toLowerCase())))
+  },[search])
+
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+  }
+
+  return (
+    <div>
+      <SearchBar value={search} onChange={handleSearch}/>
+      <Matches matches={matches}/>
+    </div>
+  )
+}
+
+export default App
