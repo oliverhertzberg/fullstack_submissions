@@ -19,7 +19,14 @@ let persons =
 
 
 app.get('/', (requests, response) => {
-    response.send('<h1>Hello World</h1>')
+    response.send('<p>go to <b>http://localhost:3001/info</b> for more info!</p>')
+})
+
+app.get('/info', (request, response) => {
+    response.send(
+        `<p>Phonebook has info for ${persons.length} people</p>
+        <p>${(new Date().toString())}</p>`
+    )
 })
 
 app.get('/api/persons', (requests, response) => {
