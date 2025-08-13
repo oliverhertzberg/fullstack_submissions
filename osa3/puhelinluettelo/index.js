@@ -49,18 +49,19 @@ const generateID = (() => persons.length > 0 ? String(Math.floor(Math.random() *
 )
 app.post('/api/persons', (request, response) => {
 
-    console.log('request body in post = ', request.body)
-    if (!request.body) {
+    const person = request.body
+    if (!person?.name || !person?.number) {
         return response.status(400).json({
-            error: 'content missing'
+            error: 'content missing, number and name required!'
         })
     }
-    console.log('headers: ',request.headers)
-    const person = request.body
-    console.log("person in post = ", person)
+    if (persons.find(p => p.name.toLowerCase() === person.name.toLowerCase())) {
+        return response.status(409).json({
+            error: 'name already in use! please provide another one.'
+        })
+    }
     person.id = generateID()
     persons = persons.concat(person)
-    console.log('persons: ', persons)
     response.json(person)
 })
 
