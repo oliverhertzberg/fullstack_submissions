@@ -45,7 +45,7 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
 })
 
-const generateID = (() => persons.length > 0 ? String(Math.max(...persons.map(c => Number(c.id))) + 1) : 0
+const generateID = (() => persons.length > 0 ? String(Math.floor(Math.random() * 100000000)) : 0
 )
 app.post('/api/persons', (request, response) => {
 
