@@ -11,7 +11,6 @@ const app = express()
 
 app.use(express.json())
 
-app.use(assignData)
 app.use(morgan(function (tokens, req, res) {
     return [
       tokens.method(req, res),
@@ -93,10 +92,6 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-function assignData(req, res, next) {
-    req.body = req.body
-    next()
-}
 
 const PORT = 3001
 app.listen(PORT, () => {
