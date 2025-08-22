@@ -35,20 +35,24 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     const personExists = persons.find(person => person.name === newName)
+    console.log('personExists = ', personExists)
     if (personExists && window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(
             personExists.id, 
             {...personExists, number: `${newNumber}`})
-          .then(setPersons(persons.map((person) => {
+          .then(res => {
             makeNotification(`Successfully updated number for ${newName}`)
-            return person.id !== personExists.id ? person : {...person, number: `${newNumber}`}
-          })))
-          .catch(error => { 
+            setPersons(persons.map((person) => {
+            return person.id !== personExists.id ? person : res.data
+          }))})
+          .catch(error => {
             console.log(error)
-            makeNotification(`Error: contact has already been removed from server!`)
+            const errMsg = error.response?.data?.error || error.message
+            makeNotification(`Error: ${errMsg}`)
         })
-    } else {
+    } else if (!personExists) {
+      console.log('personExists = ', personExists)
       personService.create({ name: `${newName}`, number: `${newNumber}` }) 
         .then((res) => {
           setPersons(persons.concat(res.data))

@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const cors = require('cors')
+// const cors = require('cors')
 
 morgan.token('data', function getData (req) {
     return JSON.stringify(req.body) 
@@ -10,6 +10,8 @@ morgan.token('data', function getData (req) {
 const app = express()
 
 app.use(express.json())
+// with express GET requests if path is found in dist
+app.use(express.static('dist'))
 
 app.use(morgan(function (tokens, req, res) {
     return [
@@ -22,7 +24,8 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ')
   }))
 
-app.use(cors())
+
+// app.use(cors())
 
 let persons = 
 [
@@ -38,10 +41,6 @@ let persons =
     }
 ]
 
-
-app.get('/', (requests, response) => {
-    response.send('<p>go to <b>http://localhost:3001/info</b> for more info!</p>')
-})
 
 app.get('/info', (request, response) => {
     response.send(
@@ -66,6 +65,18 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
 })
 
+app.put('/api/persons/:id', (request, response) => {
+    const person = request.body
+
+    if (!person?.number) {
+        return response.status(400).json({
+            error: `number cannot be empty!`
+        })
+    }
+    persons = persons.map((x) => x.id !== request.params.id ? x : person)
+    return response.json(person)
+})
+
 const generateID = (() => persons.length > 0 ? String(Math.floor(Math.random() * 100000000)) : 0
 )
 app.post('/api/persons', (request, response) => {
@@ -81,6 +92,7 @@ app.post('/api/persons', (request, response) => {
             error: 'name already in use! please provide another one.'
         })
     }
+    console.log('we are in express post!!!')
     person.id = generateID()
     persons = persons.concat(person)
     response.json(person)
