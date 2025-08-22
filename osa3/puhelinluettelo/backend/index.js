@@ -10,7 +10,7 @@ morgan.token('data', function getData (req) {
 const app = express()
 
 app.use(express.json())
-// with express GET requests if path is found in dist
+// with express GET requests check if path is found in dist
 app.use(express.static('dist'))
 
 app.use(morgan(function (tokens, req, res) {
@@ -92,7 +92,6 @@ app.post('/api/persons', (request, response) => {
             error: 'name already in use! please provide another one.'
         })
     }
-    console.log('we are in express post!!!')
     person.id = generateID()
     persons = persons.concat(person)
     response.json(person)

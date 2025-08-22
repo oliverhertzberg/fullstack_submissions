@@ -60,7 +60,8 @@ const App = () => {
         })
         .catch((error) => {
           console.log(error)
-          makeNotification(`Error: failed to create phonebook contact ${newName}!`)
+          const errMsg = error.response?.data?.error || error.message
+          makeNotification(`Error: ${errMsg}!`)
         })
     }
     setNewName('')
@@ -78,7 +79,8 @@ const App = () => {
       })
       .catch((error) => {
         console.log(error)
-        makeNotification(`Error: failed to delete contact`)
+        const errMsg = error.response?.data?.error || error.message
+        makeNotification(`Error: ${errMsg}`)
       })
     }
   }
