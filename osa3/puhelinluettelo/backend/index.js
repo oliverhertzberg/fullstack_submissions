@@ -34,7 +34,10 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (requests, response) => {
-    Person.find(({}).then(persons => response.json(persons)))
+    Person.find(({}).then((persons) => {
+        console.log('persons in get: ', persons)
+        response.json(persons)
+    }))
 })
 
 app.get('/api/persons/:id', (request, response) => {
