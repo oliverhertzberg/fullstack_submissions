@@ -1,9 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-
-morgan.token('data', function getData (req) {
-    return JSON.stringify(req.body) 
-})
+const Person = require('./models/person')
 
 
 const app = express()
@@ -24,30 +21,20 @@ app.use(morgan(function (tokens, req, res) {
   }))
 
 
-let persons = 
-[
-    {
-        "id": "1",
-        "name": "RAT",
-        "number": "444444444"
-    },
-    {
-        "id": "2",
-        "name": "DOG",
-        "number": "777777777"
-    }
-]
-
-
 app.get('/info', (request, response) => {
-    response.send(
-        `<p>Phonebook has info for ${persons.length} people</p>
-        <p>${(new Date().toString())}</p>`
-    )
+    const persons_count = 0
+    Person.find(({}).then((data) => {
+        for (const person of data)
+            persons_count += 1
+        response.send(
+            `<p>Phonebook has info for ${persons_count} people</p>
+            <p>${(new Date().toString())}</p>`
+        )
+    }))
 })
 
 app.get('/api/persons', (requests, response) => {
-    response.json(persons)
+    Person.find(({}).then(persons => response.json(persons)))
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -102,7 +89,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
