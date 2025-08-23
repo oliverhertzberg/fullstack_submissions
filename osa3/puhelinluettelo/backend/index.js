@@ -23,21 +23,23 @@ app.use(morgan(function (tokens, req, res) {
 
 app.get('/info', (request, response) => {
     const persons_count = 0
-    Person.find(({}).then((data) => {
-        for (const person of data)
+    Person.find({}).then((data) => {
+        for (const person of data){
+            console.log(person)
             persons_count += 1
+        }
         response.send(
             `<p>Phonebook has info for ${persons_count} people</p>
             <p>${(new Date().toString())}</p>`
         )
-    }))
+    })
 })
 
 app.get('/api/persons', (requests, response) => {
-    Person.find(({}).then((persons) => {
+    Person.find({}).then((persons) => {
         console.log('persons in get: ', persons)
         response.json(persons)
-    }))
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -64,24 +66,30 @@ app.put('/api/persons/:id', (request, response) => {
     return response.json(person)
 })
 
-const generateID = (() => persons.length > 0 ? String(Math.floor(Math.random() * 100000000)) : 0
-)
+
 app.post('/api/persons', (request, response) => {
 
-    const person = request.body
-    if (!person?.name || !person?.number) {
+    if (!request.body?.name || !request.body?.number) {
         return response.status(400).json({
             error: 'content missing, number and name required!'
         })
     }
-    if (persons.find(p => p.name.toLowerCase() === person.name.toLowerCase())) {
-        return response.status(409).json({
-            error: 'name already in use! please provide another one.'
+    Person.find({ name: request.body.name }).collation( { locale: 'en', strength : 1 } )
+        .then((result) => {
+            if (result?.length !== 0) {
+                return response.status(409).json({
+                    error: 'name already in use! please provide another one.'
+                })
+             }
+             const person = new Person({
+                name: request.body.name,
+                number: request.body.number,
+            })
+            person.save().then(() => {
+                console.log(`created new person: ${person}`)
+                response.json(person)
+            })
         })
-    }
-    person.id = generateID()
-    persons = persons.concat(person)
-    response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -92,7 +100,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

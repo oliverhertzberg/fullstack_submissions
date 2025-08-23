@@ -1,12 +1,12 @@
-GET https://puhelinluettelo-fullstack-qbp1.onrender.com/
+GET http://localhost:3001/api/persons
 
 ###
 
-GET https://puhelinluettelo-fullstack-qbp1.onrender.com/info
+GET http://localhost:3001/api/persons/68aa10d040627c112285a353
 
 ###
-GET https://puhelinluettelo-fullstack-qbp1.onrender.com/api/persons
+GET http://localhost:3001/api/persons
 
 ###
 
-GET https://puhelinluettelo-fullstack-qbp1.onrender.com/api/persons/1
+GET http://localhost:3001/api/persons

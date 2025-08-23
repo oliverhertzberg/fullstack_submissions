@@ -1,14 +1,14 @@
-POST https://puhelinluettelo-fullstack-qbp1.onrender.com/api/persons
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "CAT",
-    "number": "1231313"
+    "name": "Snake",
+    "number": "44444444"
 }
 
 ###
 
-POST https://puhelinluettelo-fullstack-qbp1.onrender.com/api/persons
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
@@ -17,7 +17,7 @@ content-type: application/json
 
 ###
 
-POST https://puhelinluettelo-fullstack-qbp1.onrender.com/api/persons
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {}
