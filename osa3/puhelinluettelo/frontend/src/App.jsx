@@ -34,17 +34,17 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const personExists = persons.find(person => person.name === newName)
+    const personExists = persons.find(person => person?.name.toLowerCase() === newName?.toLowerCase())
     console.log('personExists = ', personExists)
     if (personExists && window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(
-            personExists.id, 
+            personExists._id,
             {...personExists, number: `${newNumber}`})
           .then(res => {
             makeNotification(`Successfully updated number for ${newName}`)
             setPersons(persons.map((person) => {
-            return person.id !== personExists.id ? person : res.data
+            return person._id !== personExists._id ? person : res.data
           }))})
           .catch(error => {
             console.log(error)
@@ -72,16 +72,16 @@ const App = () => {
     e.preventDefault()
     console.log(contact)
     if(window.confirm(`Are you sure you want to delete user: ${contact.name}`)) {
-      personService.remove(contact.id)
-      .then(() => {
-        setPersons(persons.filter((person) => person.id !== contact.id))
-        makeNotification(`Successfully deleted contact!`)
-      })
-      .catch((error) => {
-        console.log(error)
-        const errMsg = error.response?.data?.error || error.message
-        makeNotification(`Error: ${errMsg}`)
-      })
+      personService.remove(contact._id)
+        .then(() => {
+          setPersons(persons.filter((person) => person._id !== contact._id))
+          makeNotification(`Successfully deleted contact!`)
+        })
+        .catch((error) => {
+          console.log(error)
+          const errMsg = error.response?.data?.error || error.message
+          makeNotification(`Error: ${errMsg}`)
+        })
     }
   }
 
