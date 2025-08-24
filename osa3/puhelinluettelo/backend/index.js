@@ -39,7 +39,7 @@ app.get('/api/persons', (requests, response) => {
         })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     Person.findById(id)
         .then((foundPerson) => {
@@ -51,7 +51,7 @@ app.get('/api/persons/:id', (request, response) => {
         .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const person = request.body
     if (!person?.number) {
         return response.status(400).json({
@@ -69,6 +69,7 @@ app.put('/api/persons/:id', (request, response) => {
             else
                 response.status(404).end()
         })
+        .catch(error => next(error))
 })
 
 
@@ -97,11 +98,12 @@ app.post('/api/persons', (request, response) => {
         })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     console.log('deleting contact with id: ', id)
     Person.findByIdAndDelete(id)
         .then(() => response.status(204).end())
+        .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
