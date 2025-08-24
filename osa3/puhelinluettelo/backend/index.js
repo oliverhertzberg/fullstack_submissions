@@ -23,48 +23,52 @@ app.use(morgan(function (tokens, req, res) {
 
 
 app.get('/info', (request, response) => {
-    const persons_count = 0
-    Person.find({}).then((data) => {
-        for (const person of data){
-            console.log(person)
-            persons_count += 1
-        }
-        response.send(
-            `<p>Phonebook has info for ${persons_count} people</p>
-            <p>${(new Date().toString())}</p>`
-        )
-    })
+    Person.find({})
+        .then((data) => {
+            response.send(
+                `<p>Phonebook has info for ${data?.length || 0} people</p>
+                <p>${(new Date().toString())}</p>`
+            )
+        })
 })
 
 app.get('/api/persons', (requests, response) => {
-    Person.find({}).then((persons) => {
-        console.log('persons in get: ', persons)
-        response.json(persons)
-    })
+    Person.find({})
+        .then((persons) => {
+            console.log('persons in get: ', persons)
+            response.json(persons)
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    console.log('typeof id = ', typeof(id))
-    const person = persons.find((x) => x.id === id)
-    console.log('person: ', person)
-    
-    if (person)
-        response.json(person)
-    else
-        response.status(404).end()
+    Person.findById(id)
+        .then((foundPerson) => {
+            if (foundPerson)
+                response.json(foundPerson)
+            else
+                response.status(404).end()
+        })
 })
 
 app.put('/api/persons/:id', (request, response) => {
     const person = request.body
-
     if (!person?.number) {
         return response.status(400).json({
             error: `number cannot be empty!`
         })
     }
-    persons = persons.map((x) => x.id !== request.params.id ? x : person)
-    return response.json(person)
+    Person.findByIdAndUpdate(
+        request.params.id,
+        { number: `${person.number}`},
+        { new: true, runValidators: true, context: 'query' }
+        )
+        .then((updatedPerson) => {
+            if(updatedPerson)
+                response.json(updatedPerson)
+            else
+                response.status(404).end()
+        })
 })
 
 
@@ -95,13 +99,13 @@ app.post('/api/persons', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    persons = persons.filter(x => x.id !== id)
-
-    response.status(204).end()
+    console.log('deleting contact with id: ', id)
+    Person.findByIdAndDelete(id)
+        .then(() => response.status(204).end())
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
