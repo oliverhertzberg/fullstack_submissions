@@ -53,11 +53,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
     const person = request.body
-    if (!person?.number) {
-        return response.status(400).json({
-            error: `number cannot be empty!`
-        })
-    }
     Person.findByIdAndUpdate(
         request.params.id,
         { number: `${person.number}`},
@@ -73,34 +68,21 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 
-app.post('/api/persons', (request, response) => {
-
-    if (!request.body?.name || !request.body?.number) {
-        return response.status(400).json({
-            error: 'content missing, number and name required!'
-        })
-    }
-    Person.find({ name: request.body.name }).collation( { locale: 'en', strength : 1 } )
-        .then((result) => {
-            if (result?.length !== 0) {
-                return response.status(409).json({
-                    error: 'name already in use! please provide another one.'
-                })
-             }
-             const person = new Person({
-                name: request.body.name,
-                number: request.body.number,
-            })
-            person.save().then(() => {
-                console.log(`created new person: ${person}`)
-                response.json(person)
-            })
-        })
+app.post('/api/persons', (request, response, next) => {
+    
+    const person = new Person({
+        name: request.body.name,
+        number: request.body.number,
+    })
+    person.save().then(() => {
+        console.log(`created new person: ${person}`)
+        response.json(person)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    console.log('deleting contact with id: ', id)
     Person.findByIdAndDelete(id)
         .then(() => response.status(204).end())
         .catch(error => next(error))
@@ -113,9 +95,11 @@ const unknownEndpoint = (request, response) => {
 const errorHandler = (error, request, response, next) => {
     console.log(error.message)
 
-    if(error.name === 'CastError')
+    if (error.name === 'CastError') {
             return response.status(400).send({ error: 'malformatted id' })
-
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
     next(error)
 }
 
