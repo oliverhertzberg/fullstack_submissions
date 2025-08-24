@@ -39,12 +39,12 @@ const App = () => {
     if (personExists && window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         personService
           .update(
-            personExists._id,
+            personExists.id,
             {...personExists, number: `${newNumber}`})
           .then(res => {
             makeNotification(`Successfully updated number for ${newName}`)
             setPersons(persons.map((person) => {
-            return person._id !== personExists._id ? person : res.data
+            return person.id !== personExists.id ? person : res.data
           }))})
           .catch(error => {
             console.log(error)
@@ -72,9 +72,9 @@ const App = () => {
     e.preventDefault()
     console.log(contact)
     if(window.confirm(`Are you sure you want to delete user: ${contact.name}`)) {
-      personService.remove(contact._id)
+      personService.remove(contact.id)
         .then(() => {
-          setPersons(persons.filter((person) => person._id !== contact._id))
+          setPersons(persons.filter((person) => person.id !== contact.id))
           makeNotification(`Successfully deleted contact!`)
         })
         .catch((error) => {
